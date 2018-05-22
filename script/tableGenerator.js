@@ -1,7 +1,5 @@
 console.log("Table generating script has started...");
 
-    //birthDate:  new Date(),//new birthDate().generate;
-    //pesel:      99999999 //new Pesel().GenerateFromBirhday();
 function User(firstName, lastName, birthDate, pesel){
     return {
         firstName:  firstName,
@@ -76,7 +74,9 @@ function DataTable() {
 };
 DataTable.prototype.displayTable = function(){
     var usersTableElem = document.getElementById("usersTable");
-    
+    var newUsersTableElem = document.createElement("table");
+    newUsersTableElem.setAttribute("id", "usersTable");
+
     var tr  =   document.createElement("tr"),
         th  =   document.createElement("th"),
         tbody=  document.createElement("tbody"),
@@ -100,7 +100,7 @@ DataTable.prototype.displayTable = function(){
     th.appendChild(text);
     tr.appendChild(th);
     tbody.appendChild(tr);
-    usersTableElem.appendChild(tbody);
+    newUsersTableElem.appendChild(tbody);
 
     this.filteredRecords.forEach(record => {
         var tr = document.createElement("tr"),
@@ -127,11 +127,14 @@ DataTable.prototype.displayTable = function(){
         tr.appendChild(td);
         tbody.appendChild(tr);
     });
+    usersTableElem.parentNode.replaceChild(newUsersTableElem, usersTableElem);
     return console.log(this.records)
 };
 DataTable.prototype.searchBarInputHandler = function(){
     var inputText = document.getElementById("searchBar").value;
     console.log(inputText);
+    this.filteredRecords = this.records;
+
     this.filteredRecords = this.filteredRecords.filter((record) => {
         return record.firstName.includes(inputText) || record.lastName.includes(inputText) || record.birthDate.includes(inputText) || record.pesel.includes(inputText);
     });
