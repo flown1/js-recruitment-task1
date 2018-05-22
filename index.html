@@ -6,9 +6,12 @@
     <title>Data table - recruitment task</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" type="text/css" media="screen" href="style/main.css" />
-    <script src="script/tableGenerator.js"></script>
+   
 </head>
 <body>
-    <div id="usersTable"></div>
+    <input type="text" id="searchBar" placeholder="Type to search..." oninput="usersTable.searchBarInputHandler();"/>
+    <table id="usersTable"></table>
+
+    <script src="script/tableGenerator.js"></script>
 </body>
 </html>
