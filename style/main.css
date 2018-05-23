@@ -28,15 +28,18 @@ thead, tbody {
     display: block;
 }
 tbody{
+    
     height: 400px; 
     overflow-y: auto;
     overflow-x: hidden;
 }
 th{
-    width: 300px;
+    width: 200px;
+    height: 30px;
 }
 td{
-    width:300px;
+    width:200px;
+    height: 25px;
 }
 tr:nth-child(even) {
     background: #fafafa;
