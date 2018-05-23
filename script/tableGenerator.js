@@ -70,7 +70,7 @@ UserDataGenerator.prototype.generateRecords = function(ammount){
         const randomizedBirthDate = userDataGenerator.generateBirthDate();
         users[i] = new User(userDataGenerator.generateFakeName(), 
                             userDataGenerator.generateFakeName(), 
-                            formatter.mmddyyyyDateFormat(randomizedBirthDate),
+                            randomizedBirthDate,
                             userDataGenerator.generatePeselFromBirthDate(randomizedBirthDate)
                         );
     }
@@ -119,7 +119,8 @@ DataTable.prototype.displayTable = function(){
     tr.appendChild(th);
     tbody.appendChild(tr);
     newUsersTableElem.appendChild(tbody);
-
+    var formatter = new Formatter;
+    
     this.filteredRecords.forEach(record => {
         var tr = document.createElement("tr"),
             td = document.createElement("td"),
@@ -133,7 +134,8 @@ DataTable.prototype.displayTable = function(){
         td = document.createElement("td");
         td.appendChild(text);
         tr.appendChild(td);
-        text = document.createTextNode(record.birthDate);
+        
+        text = document.createTextNode(formatter.mmddyyyyDateFormat(record.birthDate));
         
         td = document.createElement("td");
         td.appendChild(text);
@@ -150,11 +152,15 @@ DataTable.prototype.displayTable = function(){
 };
 DataTable.prototype.searchBarInputHandler = function(){
     var inputText = document.getElementById("searchBar").value;
-    console.log(inputText);
+    // console.log(inputText);
+    const formatter = new Formatter;
     this.filteredRecords = this.records;
 
     this.filteredRecords = this.filteredRecords.filter((record) => {
-        return record.firstName.includes(inputText) || record.lastName.includes(inputText) || record.birthDate.includes(inputText) || record.pesel.includes(inputText);
+        return record.firstName.includes(inputText) 
+                || record.lastName.includes(inputText) 
+                || formatter.mmddyyyyDateFormat(record.birthDate).includes(inputText) 
+                || record.pesel.includes(inputText);
     });
     console.log(this.filteredRecords);
     this.displayTable();
@@ -178,11 +184,11 @@ DataTable.prototype.sorting = function(type, key){
                     return 1
                 return 0
             });
-        else if(key === 'birthDay')
+        else if(key === 'birthDate')
             this.filteredRecords.sort((a,b) =>{ 
-                if (a.birthDay < b.birthDay)
+                if (a.birthDate < b.birthDate)
                     return -1
-                if ( a.birthDay > b.birthDay)
+                if ( a.birthDate > b.birthDate)
                     return 1
                 return 0
             });
@@ -212,11 +218,11 @@ DataTable.prototype.sorting = function(type, key){
                     return 1
                 return 0
             });
-        else if(key === 'birthDay')
+        else if(key === 'birthDate')
             this.filteredRecords.sort((a,b) =>{ 
-                if (a.birthDay > b.birthDay)
+                if (a.birthDate > b.birthDate)
                     return -1
-                if ( a.birthDay < b.birthDay)
+                if ( a.birthDate < b.birthDate)
                     return 1
                 return 0
             });
