@@ -3,6 +3,11 @@
     padding: 0;
     
 }
+#searchBar{
+    width: 300px;
+    height: 30px;
+    margin: 10px 15px;
+}
 #userTable{
     min-width: 400px;
 }
@@ -22,9 +27,12 @@ tbody{
 th, td{
     min-width: 100px;
 }
+tr:nth-child(even) {
+    background: #fafafa;
+}
 th{
     cursor: pointer;
 }
 td{
-    padding: 10px 15px;
+    padding: 5px 15px;
 }

@@ -13,6 +13,10 @@ function UserDataGenerator() {
     this.letters            = "abcdefghijklmnoprstuwxyz",
     this.usedPeselNumbers   = [];
 };
+
+
+
+
 function Formatter() {};
 Formatter.prototype.toTwoDecimals = function(num){
     return ("0" + num).slice(-2);
@@ -22,11 +26,16 @@ Formatter.prototype.mmddyyyyDateFormat = function(date){
             + this.toTwoDecimals(date.getDay().toString()) + "/" 
             + date.getFullYear();
 }
+
+
+
 UserDataGenerator.prototype.randomFromRange = function(start,end){
     return Math.floor((Math.random() * (end - start + 1) + start));
 }
 UserDataGenerator.prototype.generateFakeName = function(){
-    const nameLength = Math.floor((Math.random() * 15) + 3);
+    const MAX_NAME_LENGTH = 20,
+          MIN_NAME_LENGTH = 3; 
+    const nameLength = Math.floor((Math.random() * MAX_NAME_LENGTH) + MIN_NAME_LENGTH);
     return Math.random().toString(36).substring(7).replace(/[0-9]/g, 'x');
 }
 UserDataGenerator.prototype.generateBirthDate = function(){ 
@@ -68,9 +77,14 @@ UserDataGenerator.prototype.generateRecords = function(ammount){
     return users;
 }
 
+
+
+
+
 function DataTable() {
     this.records = new UserDataGenerator().generateRecords(200);
     this.filteredRecords = this.records;
+    this.sortedAscending = false;
 };
 DataTable.prototype.displayTable = function(){
     var usersTableElem = document.getElementById("usersTable");
@@ -83,20 +97,24 @@ DataTable.prototype.displayTable = function(){
         text=   document.createTextNode("First Name");
     
     th.appendChild(text);
+    th.setAttribute('onclick', "usersTable.onHeaderCellClick('firstNameHeader')");
     tr.appendChild(th);
 
     text = document.createTextNode("Last Name");
     th = document.createElement("th");
+    th.setAttribute('onclick', "usersTable.onHeaderCellClick('lastNameHeader')");
     th.appendChild(text);
     tr.appendChild(th);
 
-    text = document.createTextNode("Birthday");
+    text = document.createTextNode("Birth Date");
     th = document.createElement("th");
+    th.setAttribute('onclick', "usersTable.onHeaderCellClick('birthDateHeader')");
     th.appendChild(text);
     tr.appendChild(th);
 
     text = document.createTextNode("Pesel");
     th = document.createElement("th");
+    th.setAttribute('onclick', "usersTable.onHeaderCellClick('peselHeader')");
     th.appendChild(text);
     tr.appendChild(th);
     tbody.appendChild(tr);
@@ -141,7 +159,118 @@ DataTable.prototype.searchBarInputHandler = function(){
     console.log(this.filteredRecords);
     this.displayTable();
 };
-var usersTable = new DataTable();
+DataTable.prototype.sorting = function(type, key){
+    if(type === 'asc'){
+        console.log('asc');
+        if(key === 'firstName')
+            this.filteredRecords.sort((a,b) =>{ 
+                if (a.firstName < b.firstName)
+                    return -1
+                if ( a.firstName > b.firstName)
+                    return 1
+                return 0
+            });
+        else if(key === 'lastName')
+            this.filteredRecords.sort((a,b) =>{ 
+                if (a.lastName < b.lastName)
+                    return -1
+                if ( a.lastName > b.lastName)
+                    return 1
+                return 0
+            });
+        else if(key === 'birthDay')
+            this.filteredRecords.sort((a,b) =>{ 
+                if (a.birthDay < b.birthDay)
+                    return -1
+                if ( a.birthDay > b.birthDay)
+                    return 1
+                return 0
+            });
+        else if(key === 'pesel')
+            this.filteredRecords.sort((a,b) =>{ 
+                if (a.pesel < b.pesel)
+                    return -1
+                if ( a.pesel > b.pesel)
+                    return 1
+                return 0
+            });
+    }else if(type === 'desc'){
+        console.log('desc');
+        if(key === 'firstName')
+            this.filteredRecords.sort((a,b) =>{ 
+                if (a.firstName > b.firstName)
+                    return -1
+                if ( a.firstName < b.firstName)
+                    return 1
+                return 0
+            });
+        else if(key === 'lastName')
+            this.filteredRecords.sort((a,b) =>{ 
+                if (a.lastName > b.lastName)
+                    return -1
+                if ( a.lastName < b.lastName)
+                    return 1
+                return 0
+            });
+        else if(key === 'birthDay')
+            this.filteredRecords.sort((a,b) =>{ 
+                if (a.birthDay > b.birthDay)
+                    return -1
+                if ( a.birthDay < b.birthDay)
+                    return 1
+                return 0
+            });
+        else if(key === 'pesel')
+            this.filteredRecords.sort((a,b) =>{ 
+                if (a.pesel > b.pesel)
+                    return -1
+                if ( a.pesel < b.pesel)
+                    return 1
+                return 0
+            });
+    }
+}
+DataTable.prototype.onHeaderCellClick = function(whichCell){
+    
+    switch(whichCell){
+        case 'firstNameHeader':
+           console.log(this.sortedAscending);
+           if(!this.sortedAscending)
+                this.sorting('asc','firstName');
+            else
+                this.sorting('desc', 'firstName');
+        break;
+        case 'lastNameHeader':
+            console.log("Sorting by lastName");
+            if(!this.sortedAscending)
+                this.sorting('asc','lastName');
+            else
+                this.sorting('desc', 'lastName');
+        break;
+        case 'birthDateHeader':
+            console.log("Sorting by birth date");
+            if(!this.sortedAscending)
+                this.sorting('asc','birthDate');
+            else
+                this.sorting('desc', 'birthDate');
+        break;
+        case 'peselHeader':
+            console.log("Sorting by pesel");
+            if(!this.sortedAscending)
+                this.sorting('asc','pesel');
+            else
+                this.sorting('desc', 'pesel');
+        break;    
+    }
+    
+    this.sortedAscending = !this.sortedAscending;
+    setTimeout(this.displayTable(), 1000);
+}
+
+
+
+
+const usersTable = new DataTable();
 usersTable.displayTable();
 
 
