@@ -10,7 +10,7 @@ function User(firstName, lastName, birthDate, pesel){
 function UserDataGenerator() {
     this.usedPeselNumbers   = [];
     this.dataConstraints = {
-        MAX_NAME_LENGTH: 20,
+        MAX_NAME_LENGTH: 15,
         MIN_NAME_LENGTH: 3
     }
 };
@@ -19,7 +19,13 @@ UserDataGenerator.prototype.randomFromRange = function(start,end){
 }
 UserDataGenerator.prototype.generateFakeName = function(){
     const nameLength = Math.floor((Math.random() * this.dataConstraints.MAX_NAME_LENGTH) + this.dataConstraints.MIN_NAME_LENGTH);
-    return Math.random().toString(36).substring(7).replace(/[0-9]/g, 'x');
+    var name = "";
+    
+    for(var i = 0; i < nameLength; i++){
+        var randomCharCode = Math.floor(Math.random() * 25) + 97;
+        name = name.concat(String.fromCharCode(randomCharCode));
+    }
+    return name.substring(0,1).toLocaleUpperCase() + name.substring(1,name.length);
 }
 UserDataGenerator.prototype.generateBirthDate = function(){ 
     var randDate = {
