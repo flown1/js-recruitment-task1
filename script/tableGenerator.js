@@ -1,5 +1,3 @@
-console.log("Table generating script has started...");
-
 function User(firstName, lastName, birthDate, pesel){
     return {
         firstName:  firstName,
@@ -10,13 +8,14 @@ function User(firstName, lastName, birthDate, pesel){
 }
 
 function UserDataGenerator() {
-    this.letters            = "abcdefghijklmnoprstuwxyz",
     this.usedPeselNumbers   = [];
+    this.dataConstraints = {
+        MAX_NAME_LENGTH: 20,
+        MIN_NAME_LENGTH: 3
+    }
 };
 
-
-
-
+/*-----------------------------------------------------------*/
 function Formatter() {};
 Formatter.prototype.toTwoDecimals = function(num){
     if(num<10){ return "0" + num.toString();}
@@ -28,15 +27,13 @@ Formatter.prototype.mmddyyyyDateFormat = function(date){
             + date.getUTCFullYear();
 }
 
-
+/*-----------------------------------------------------------*/
 
 UserDataGenerator.prototype.randomFromRange = function(start,end){
     return Math.floor((Math.random() * (end - start + 1) + start));
 }
 UserDataGenerator.prototype.generateFakeName = function(){
-    const MAX_NAME_LENGTH = 20,
-          MIN_NAME_LENGTH = 3; 
-    const nameLength = Math.floor((Math.random() * MAX_NAME_LENGTH) + MIN_NAME_LENGTH);
+    const nameLength = Math.floor((Math.random() * this.dataConstraints.MAX_NAME_LENGTH) + this.dataConstraints.MIN_NAME_LENGTH);
     return Math.random().toString(36).substring(7).replace(/[0-9]/g, 'x');
 }
 UserDataGenerator.prototype.generateBirthDate = function(){ 
@@ -49,7 +46,6 @@ UserDataGenerator.prototype.generateBirthDate = function(){
 }
 UserDataGenerator.prototype.generatePeselFromBirthDate = function(birthDate){
     var formatter = new Formatter;
-    console.log(birthDate);
     var pesel =   birthDate.getUTCFullYear().toString().substring(2,4) +
                     formatter.toTwoDecimals(birthDate.getUTCMonth()) +
                     formatter.toTwoDecimals(birthDate.getUTCDate());
@@ -63,7 +59,6 @@ UserDataGenerator.prototype.generatePeselFromBirthDate = function(birthDate){
     return pesel;
 }
 UserDataGenerator.prototype.generateRecords = function(ammount){
-    console.log("Generating...");
     const users = new Array(ammount);
     const userDataGenerator = new UserDataGenerator();
 
@@ -80,8 +75,7 @@ UserDataGenerator.prototype.generateRecords = function(ammount){
 }
 
 
-
-
+/*-----------------------------------------------------------*/
 
 function DataTable() {
     this.records = new UserDataGenerator().generateRecords(200);
@@ -96,12 +90,13 @@ DataTable.prototype.displayTable = function(){
     var tr  =   document.createElement("tr"),
         th  =   document.createElement("th"),
         tbody=  document.createElement("tbody"),
+        thead=  document.createElement("thead"),
         text=   document.createTextNode("First Name");
     
     th.appendChild(text);
     th.setAttribute('onclick', "usersTable.onHeaderCellClick('firstNameHeader')");
     tr.appendChild(th);
-
+    
     text = document.createTextNode("Last Name");
     th = document.createElement("th");
     th.setAttribute('onclick', "usersTable.onHeaderCellClick('lastNameHeader')");
@@ -119,10 +114,9 @@ DataTable.prototype.displayTable = function(){
     th.setAttribute('onclick', "usersTable.onHeaderCellClick('peselHeader')");
     th.appendChild(text);
     tr.appendChild(th);
-    tbody.appendChild(tr);
-    newUsersTableElem.appendChild(tbody);
+    thead.appendChild(tr);
+
     var formatter = new Formatter;
-    
     this.filteredRecords.forEach(record => {
         var tr = document.createElement("tr"),
             td = document.createElement("td"),
@@ -149,8 +143,8 @@ DataTable.prototype.displayTable = function(){
         tr.appendChild(td);
         tbody.appendChild(tr);
     });
+    newUsersTableElem.append(thead,tbody);
     usersTableElem.parentNode.replaceChild(newUsersTableElem, usersTableElem);
-    return console.log(this.records)
 };
 DataTable.prototype.searchBarInputHandler = function(){
     var inputText = document.getElementById("searchBar").value;
@@ -166,10 +160,9 @@ DataTable.prototype.searchBarInputHandler = function(){
     });
     console.log(this.filteredRecords);
     this.displayTable();
-};
+}
 DataTable.prototype.sorting = function(type, key){
     if(type === 'asc'){
-        console.log('asc');
         if(key === 'firstName')
             this.filteredRecords.sort((a,b) =>{ 
                 if (a.firstName < b.firstName)
@@ -242,7 +235,6 @@ DataTable.prototype.onHeaderCellClick = function(whichCell){
     
     switch(whichCell){
         case 'firstNameHeader':
-           console.log(this.sortedAscending);
            if(!this.sortedAscending)
                 this.sorting('asc','firstName');
             else
@@ -275,7 +267,7 @@ DataTable.prototype.onHeaderCellClick = function(whichCell){
     setTimeout(this.displayTable(), 1000);
 }
 
-
+/*-----------------------------------------------------------*/
 
 
 const usersTable = new DataTable();

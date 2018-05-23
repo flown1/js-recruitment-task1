@@ -1,38 +1,46 @@
 *{
     margin: 0;
-    padding: 0;
+    padding: 0;  
+}
+html,body{
+    height: 100%; width: 100%
+};
+.main-container{
     
 }
 #searchBar{
+    text-align: center;
     width: 300px;
     height: 30px;
     margin: 10px 15px;
 }
-#userTable{
-    min-width: 400px;
+.table-wrapper{
+    width:600px;
+}
+#usersTable{
+   
 }
 table, th, td{
     border: 1px solid #000;
     border-collapse: collapse;
 }
-
 thead, tbody {
     display: block;
 }
 tbody{
-    height: 400px;
+    height: 400px; 
     overflow-y: auto;
     overflow-x: hidden;
 }
-th, td{
-    min-width: 100px;
+th{
+    width: 300px;
+}
+td{
+    width:300px;
 }
 tr:nth-child(even) {
     background: #fafafa;
 }
 th{
     cursor: pointer;
-}
-td{
-    padding: 5px 15px;
 }

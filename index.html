@@ -9,8 +9,12 @@
    
 </head>
 <body>
-    <input type="text" id="searchBar" placeholder="Type to search..." oninput="usersTable.searchBarInputHandler();"/>
-    <table id="usersTable"></table>
+    <div class="main-container">
+        <input type="text" id="searchBar" placeholder="Type to search..." oninput="usersTable.searchBarInputHandler();"/>
+        <div class="table-wrapper">
+            <table id="usersTable"></table>
+        </div>
+    </div>
 
     <script src="script/tableGenerator.js"></script>
 </body>
