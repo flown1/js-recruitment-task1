@@ -19,12 +19,13 @@ function UserDataGenerator() {
 
 function Formatter() {};
 Formatter.prototype.toTwoDecimals = function(num){
-    return ("0" + num).slice(-2);
+    if(num<10){ return "0" + num.toString();}
+    else return num;
 } 
 Formatter.prototype.mmddyyyyDateFormat = function(date){
-    return this.toTwoDecimals(date.getMonth().toString()) + "/" 
-            + this.toTwoDecimals(date.getDay().toString()) + "/" 
-            + date.getFullYear();
+    return this.toTwoDecimals(date.getUTCMonth()) + "/" 
+            + this.toTwoDecimals(date.getUTCDate()) + "/" 
+            + date.getUTCFullYear();
 }
 
 
@@ -48,9 +49,10 @@ UserDataGenerator.prototype.generateBirthDate = function(){
 }
 UserDataGenerator.prototype.generatePeselFromBirthDate = function(birthDate){
     var formatter = new Formatter;
-    var pesel =   birthDate.getFullYear().toString().substring(2,4) +
-                    formatter.toTwoDecimals((birthDate.getMonth() + 1).toString()) +
-                    formatter.toTwoDecimals(birthDate.getDay().toString());
+    console.log(birthDate);
+    var pesel =   birthDate.getUTCFullYear().toString().substring(2,4) +
+                    formatter.toTwoDecimals(birthDate.getUTCMonth()) +
+                    formatter.toTwoDecimals(birthDate.getUTCDate());
     
     var tempPesel = pesel;
     do{
@@ -64,7 +66,6 @@ UserDataGenerator.prototype.generateRecords = function(ammount){
     console.log("Generating...");
     const users = new Array(ammount);
     const userDataGenerator = new UserDataGenerator();
-    const formatter = new Formatter;
 
     for(i = 0; i < ammount; i++){
         const randomizedBirthDate = userDataGenerator.generateBirthDate();
@@ -74,6 +75,7 @@ UserDataGenerator.prototype.generateRecords = function(ammount){
                             userDataGenerator.generatePeselFromBirthDate(randomizedBirthDate)
                         );
     }
+    
     return users;
 }
 
